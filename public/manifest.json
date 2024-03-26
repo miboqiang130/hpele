@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "hpele",
+  "version": "1.0",
+  "default_locale": "en",
+  "description": "__MSG_description__",
+  "permissions": ["storage", "downloads", "tabs", "scripting"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "action": {
+    "default_icon": {
+      "16": "image/icon16.png",
+      "32": "image/icon32.png",
+      "48": "image/icon48.png",
+      "64": "image/icon64.png",
+      "128": "image/icon128.png"
+    },
+    "default_title": "hpele",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html"
+}
