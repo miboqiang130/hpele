@@ -1,7 +1,6 @@
 @import "./variable.less";
 
 #options {
-  display: flex;
   width: 100%;
   height: 100%;
   background-color: @bg;
@@ -9,11 +8,209 @@
 
   > nav {
     width: 350px;
+    padding: 0 30px;
     background-color: @bg-contain;
+
+    > header {
+      line-height: 100px;
+      font-size: 2rem;
+      font-family: 美绩点阵体;
+      letter-spacing: 4px;
+
+      img {
+        margin-right: @spacing;
+        vertical-align: text-top;
+      }
+    }
+
+    .website-list {
+      h3 {
+        margin-top: 0;
+
+        svg {
+          margin-left: 6px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .card {
+    border-radius: @radius;
+    background-color: @bg-contain;
+    overflow: hidden;
   }
 
   > main {
-    flex: 1;
+    height: 100%;
     width: 0;
+    padding: 30px;
+
+    .top {
+      height: 60px;
+      padding: 0 38px;
+      margin-bottom: @spacing;
+      line-height: 60px;
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-weight: bold;
+
+        li {
+          display: inline-block;
+          margin-right: @spacing;
+          cursor: pointer;
+          font-size: 1.2rem;
+
+          &.active {
+            color: @blue;
+          }
+        }
+      }
+    }
+
+    .content {
+      height: calc(100% - 80px);
+
+      .editor-box {
+        height: calc(100% - 50px);
+        padding: 0 @spacing;
+      }
+
+      h3 {
+        margin: 0;
+        padding-left: @spacing;
+        line-height: 50px;
+      }
+
+      #css {
+        height: 100%;
+
+        > * {
+          height: 100%;
+        }
+
+        .remove-list {
+          position: relative;
+          flex-direction: column;
+          width: 300px;
+          margin-right: @spacing;
+
+          .items {
+            .item {
+            }
+          }
+
+          .new-item {
+            height: 100px;
+            padding: 0 @spacing;
+            line-height: 100px;
+          }
+
+          .new-drawer {
+            .textarea {
+              height: 200px;
+              color: @text-normal;
+              border-color: @border;
+              font-family: "JetBrainsMono";
+
+              &::placeholder {
+                color: @text-dark;
+              }
+            }
+
+            .operate {
+              margin-top: 6px;
+              text-align: right;
+
+              span {
+                cursor: pointer;
+              }
+
+              .blue {
+                margin-right: 10px;
+                color: @blue1;
+              }
+            }
+          }
+        }
+
+        .custom-css {
+          padding-bottom: @spacing;
+        }
+      }
+
+      #javascript {
+        height: 100%;
+        padding-bottom: @spacing;
+      }
+    }
+  }
+
+  .editor-container {
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    border-radius: @radius;
+    overflow: hidden;
+    border: 1px solid @border;
+
+    .editor-header {
+      padding: 0 @spacing;
+      height: 40px;
+      background-color: #21252b;
+
+      > * {
+        cursor: pointer;
+      }
+
+      > svg {
+        margin-right: 10px;
+      }
+
+      .format {
+        margin-right: 6px;
+      }
+
+      .save-btn {
+        height: 24px;
+        background-color: @green;
+        color: white;
+        border: 1px solid @green;
+      }
+    }
+
+    .editor {
+      height: calc(100% - 40px);
+    }
+  }
+}
+
+.ant-dropdown {
+  ul.ant-dropdown-menu {
+    background-color: @popup;
+    font-family: "美绩点阵体";
+
+    li span,
+    li svg {
+      color: @text-normal;
+    }
+  }
+}
+
+.ant-drawer {
+  .ant-drawer-content-wrapper {
+    background-color: transparent;
+    div {
+      background-color: transparent;
+    }
+
+    .ant-drawer-body {
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
+      background-color: @popup;
+    }
   }
 }

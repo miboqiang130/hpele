@@ -1,4 +1,6 @@
 export default {
-  getData() {},
+  async getData() {
+    return { websites: [], config: {} };
+  },
   setData() {},
 };

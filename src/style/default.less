@@ -3,6 +3,7 @@ body {
   padding: 0;
   margin: 0;
   height: 100%;
+  font-size: 14px;
 }
 
 div,
@@ -12,7 +13,65 @@ nav {
   box-sizing: border-box;
 }
 
+header,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "美绩点阵体";
+  font-weight: normal;
+}
+
+button {
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.mjdzt {
+  font-family: "美绩点阵体";
+}
+
 #app {
   width: 100%;
   height: 100%;
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-1 {
+    flex: 1;
+  }
+
+  .flex-middle {
+    align-items: center;
+  }
+
+  .margin-right-auto {
+    margin-right: auto;
+  }
+
+  .margin-left-auto {
+    margin-left: auto;
+  }
+
+  .hide {
+    display: none;
+  }
+}
+
+@font-face {
+  font-family: JetBrainsMono;
+  src: url("@/assets/fonts/JetBrainsMono/JetBrainsMono-Regular.woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 美绩点阵体;
+  src: url("@/assets/fonts/美绩点阵体.ttf");
+  font-weight: normal;
+  font-style: normal;
 }
