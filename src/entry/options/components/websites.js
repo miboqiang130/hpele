@@ -7,13 +7,40 @@ import NewSvg from "@/assets/svg/new.svg";
 import ImportSvg from "@/assets/svg/import.svg";
 import ExportSvg from "@/assets/svg/export.svg";
 import SyncSvg from "@/assets/svg/sync.svg";
+import SettingSvg from "@/assets/svg/setting.svg";
 
-const WebsiteItem = memo(function ({ data }) {
-  return <li>{data.title}</li>;
+const WebsiteItem = memo(function ({
+  data,
+  index,
+  currentIndex,
+  setCurrentIndex,
+}) {
+  return (
+    <li
+      className={index === currentIndex ? "active" : ""}
+      onClick={() => setCurrentIndex(index)}
+    >
+      <div className="website-title" title={data.title}>
+        <img src={data.icon} alt="icon" />
+        <b>{data.title}</b>
+      </div>
+      <a href={data.host} target="_blank">
+        {data.host}
+      </a>
+    </li>
+  );
 });
 
-export default function ({ data }) {
-  const items = data.map(i => <WebsiteItem data={i} />);
+export default function ({ data, currentIndex, setCurrentIndex }) {
+  const items = (data?.websites || []).map((item, index) => (
+    <WebsiteItem
+      key={index}
+      data={item}
+      index={index}
+      currentIndex={currentIndex}
+      setCurrentIndex={setCurrentIndex}
+    />
+  ));
   const inputRef = useRef(null);
 
   // 导出数据
@@ -32,6 +59,9 @@ export default function ({ data }) {
         <InputModule ref={inputRef} />
         <Tooltip title="新增网站">
           <NewSvg height="16" />
+        </Tooltip>
+        <Tooltip title="设置">
+          <SettingSvg height="18" />
         </Tooltip>
         <Dropdown
           menu={{
@@ -56,7 +86,8 @@ export default function ({ data }) {
                 icon: <SyncSvg />,
               },
             ],
-          }}>
+          }}
+        >
           <MoreSvg height="16" />
         </Dropdown>
       </h3>

@@ -12,6 +12,8 @@ const routes = ["样式", "脚本"];
 function Options() {
   const [content, setContent] = useState("样式");
   const [storage, setStorage] = useState({});
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const website = storage?.websites?.[currentIndex];
 
   useEffect(() => {
     API.getData().then(rsp => {
@@ -26,7 +28,11 @@ function Options() {
           <img height="32" src="/image/icon32.png" />
           <b>HPELE</b>
         </header>
-        <Websites data={storage.websites || []} />
+        <Websites
+          data={storage}
+          currentIndex={currentIndex}
+          setCurrentIndex={setCurrentIndex}
+        />
       </nav>
       <main className="flex-1">
         <div className="top card">
@@ -42,7 +48,11 @@ function Options() {
           </ul>
         </div>
         <div className="content">
-          {content === "样式" ? <Css /> : <Javascript />}
+          {content === "样式" ? (
+            <Css data={website} />
+          ) : (
+            <Javascript data={website} />
+          )}
         </div>
       </main>
     </div>
