@@ -1,7 +1,5 @@
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import * as prettier from "prettier/standalone";
-import cssPlugin from "prettier/plugins/postcss";
-import jsPlugin from "prettier/plugins/babel";
 import React, { useEffect, useState } from "react";
 import { Tooltip } from "antd";
 import FullScreenSvg from "@/assets/svg/fullScreen.svg";
@@ -12,31 +10,45 @@ export default function ({ value, language, onSave }) {
   const [editor, setEditor] = useState(null);
   const editorDom = React.useRef(null);
   useEffect(() => {
-    setEditor(
-      monaco.editor.create(editorDom.current, {
-        value,
-        language,
-        theme: "vs-dark",
-      }),
-    );
+    const ed = monaco.editor.create(editorDom.current, {
+      value,
+      language,
+      theme: "vs-dark",
+    });
+    setEditor(ed);
     editorDom.current.onfullscreenchange = function () {
-      editor.layout();
+      ed.layout();
     };
   }, []);
+  useEffect(() => {
+    editor?.setValue(value);
+  }, [value]);
 
   // 格式化代码
   const format = async () => {
+    let options = {};
+    switch (language) {
+      case "javascript":
+        options = {
+          parser: "babel",
+          plugins: [await import("prettier/plugins/babel"), await import("prettier/plugins/estree")],
+        };
+        break;
+      case "less":
+        options = {
+          parser: "less",
+          plugins: await import("prettier/plugins/postcss"),
+        };
+        break;
+    }
     const value = editor.getValue();
-    const newValue = await prettier.format(value, {
-      parser: language,
-      plugins: [cssPlugin, jsPlugin],
-    });
+    const newValue = await prettier.format(value, options);
     editor.setValue(newValue);
   };
 
   // 重置代码
   const resetCode = () => {
-    editor.setValue(value);
+    editor.setValue(value || "");
   };
 
   return (
@@ -50,10 +62,7 @@ export default function ({ value, language, onSave }) {
           <ResetSvg height="18" onClick={resetCode} />
         </Tooltip>
         <Tooltip title="全屏">
-          <FullScreenSvg
-            height="14"
-            onClick={() => editorDom.current.requestFullscreen()}
-          />
+          <FullScreenSvg height="14" onClick={() => editorDom.current.requestFullscreen()} />
         </Tooltip>
         <button className="save-btn">保存</button>
       </div>

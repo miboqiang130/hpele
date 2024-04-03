@@ -11,7 +11,11 @@ const defaultComment = `/**
 export default function ({ data }) {
   const [drawer, setDrawer] = useState(false);
   const [newTextarea, setNewTextarea] = useState("");
-  const removeList = data?.style?.removeList?.map(i => <div className="item">{i}</div>);
+  const removeList = data?.style?.removeList?.map((i, index) => (
+    <div className="item" key={index}>
+      {i}
+    </div>
+  ));
 
   return (
     <div id="css" className="flex">

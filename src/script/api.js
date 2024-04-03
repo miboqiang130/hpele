@@ -12,7 +12,9 @@ export default {
           style: {
             removeList: ["#app ul.list", "html body div"],
           },
-          script: {},
+          script: {
+            code: "1233",
+          },
         },
         {
           id: 1,
@@ -26,8 +28,7 @@ export default {
         },
       ],
       setting: {
-        removeCss:
-          "{position:absolute;right:100vw;top:100vh;display:none;opacity:0;z-index:-1;width:0px;height:0;overflow:hidden;}",
+        removeCss: "{position:absolute;right:100vw;top:100vh;display:none;opacity:0;z-index:-1;width:0px;height:0;overflow:hidden;}",
       },
     };
   },

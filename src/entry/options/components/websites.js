@@ -1,5 +1,5 @@
-import { memo, useRef } from "react";
-import { Tooltip, Dropdown } from "antd";
+import { memo, useRef, useState } from "react";
+import { Tooltip, Dropdown, Modal } from "antd";
 import API from "@/script/api";
 import InputModule from "./InputModule";
 import MoreSvg from "@/assets/svg/more.svg";
@@ -9,17 +9,9 @@ import ExportSvg from "@/assets/svg/export.svg";
 import SyncSvg from "@/assets/svg/sync.svg";
 import SettingSvg from "@/assets/svg/setting.svg";
 
-const WebsiteItem = memo(function ({
-  data,
-  index,
-  currentIndex,
-  setCurrentIndex,
-}) {
+const WebsiteItem = memo(function ({ data, index, currentIndex, setCurrentIndex }) {
   return (
-    <li
-      className={index === currentIndex ? "active" : ""}
-      onClick={() => setCurrentIndex(index)}
-    >
+    <li className={index === currentIndex ? "active" : ""} onClick={() => setCurrentIndex(index)}>
       <div className="website-title" title={data.title}>
         <img src={data.icon} alt="icon" />
         <b>{data.title}</b>
@@ -32,14 +24,10 @@ const WebsiteItem = memo(function ({
 });
 
 export default function ({ data, currentIndex, setCurrentIndex }) {
+  const [newModal, setNewModal] = useState(false);
+  const [settingModal, setSettingModal] = useState(false);
   const items = (data?.websites || []).map((item, index) => (
-    <WebsiteItem
-      key={index}
-      data={item}
-      index={index}
-      currentIndex={currentIndex}
-      setCurrentIndex={setCurrentIndex}
-    />
+    <WebsiteItem key={index} data={item} index={index} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
   ));
   const inputRef = useRef(null);
 
@@ -51,6 +39,10 @@ export default function ({ data, currentIndex, setCurrentIndex }) {
       filename: "export.json",
     });
   };
+  const handleOk = () => {};
+  const handleCancel = () => {
+    setNewModal(false);
+  };
 
   return (
     <div className="website-list">
@@ -58,10 +50,10 @@ export default function ({ data, currentIndex, setCurrentIndex }) {
         <span className="margin-right-auto">网站列表</span>
         <InputModule ref={inputRef} />
         <Tooltip title="新增网站">
-          <NewSvg height="16" />
+          <NewSvg height="16" onClick={() => setNewModal(true)} />
         </Tooltip>
         <Tooltip title="设置">
-          <SettingSvg height="18" />
+          <SettingSvg height="18" onClick={() => setSettingModal(true)} />
         </Tooltip>
         <Dropdown
           menu={{
@@ -86,12 +78,38 @@ export default function ({ data, currentIndex, setCurrentIndex }) {
                 icon: <SyncSvg />,
               },
             ],
-          }}
-        >
+          }}>
           <MoreSvg height="16" />
         </Dropdown>
       </h3>
       <ul>{items}</ul>
+
+      <Modal
+        title="新增网站"
+        open={newModal}
+        onOk={handleOk}
+        okText="确定"
+        onCancel={handleCancel}
+        cancelText="取消"
+        okButtonProps={{ ghost: true }}
+        cancelButtonProps={{ ghost: true }}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
+      <Modal
+        title="设置"
+        open={settingModal}
+        onOk={handleOk}
+        okText="确定"
+        onCancel={() => setSettingModal(false)}
+        cancelText="取消"
+        okButtonProps={{ ghost: true }}
+        cancelButtonProps={{ ghost: true }}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
     </div>
   );
 }
