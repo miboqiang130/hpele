@@ -1,5 +1,5 @@
 import MonacoEditor from "./monacoEditor";
-import { Button, Drawer, Input } from "antd";
+import { Button, Drawer, Input, message } from "antd";
 import { useState } from "react";
 
 const defaultComment = `/**
@@ -8,14 +8,21 @@ const defaultComment = `/**
  */
 `;
 
-export default function ({ data }) {
+export default function ({ data, dispatch }) {
+  const list = data?.style?.removeList || [];
   const [drawer, setDrawer] = useState(false);
   const [newTextarea, setNewTextarea] = useState("");
-  const removeList = data?.style?.removeList?.map((i, index) => (
+  const removeList = list.map((i, index) => (
     <div className="item" key={index}>
       {i}
     </div>
   ));
+
+  // 代码保存
+  const onSave = code => {
+    dispatch({ type: "updateStyleCode", id: data.id, code });
+    message.success("保存成功");
+  };
 
   return (
     <div id="css" className="flex">
@@ -33,9 +40,22 @@ export default function ({ data }) {
             className="textarea"
             placeholder="请输入要新增的选择器，回车区分多个选择器"
             style={{ background: "#161b22", resize: "none" }}
+            onChange={e => setNewTextarea(e.target.value)}
           />
           <div className="operate">
-            <span className="blue">确定</span>
+            <span
+              className="blue"
+              onClick={() => {
+                const text = newTextarea.trim();
+                const newList = text.split("\n").concat(list || []);
+                if (text) {
+                  dispatch({ type: "updateRemoveList", id: data.id, data: newList });
+                  setDrawer(false);
+                  setNewTextarea("");
+                }
+              }}>
+              确定
+            </span>
             <span
               onClick={() => {
                 setDrawer(false);
@@ -49,7 +69,7 @@ export default function ({ data }) {
       <div className="card custom-css flex-1">
         <h3>自定义样式</h3>
         <div className="editor-box">
-          <MonacoEditor className="editor-dom" language="less" value={defaultComment} />
+          <MonacoEditor className="editor-dom" language="less" value={data?.style?.code || defaultComment} onSave={onSave} />
         </div>
       </div>
     </div>

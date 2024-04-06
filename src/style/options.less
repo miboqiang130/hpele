@@ -155,17 +155,6 @@
           }
 
           .new-drawer {
-            .textarea {
-              height: 200px;
-              color: @text-normal;
-              border-color: @border;
-              font-family: "JetBrainsMono";
-
-              &::placeholder {
-                color: @text-dark;
-              }
-            }
-
             .operate {
               margin-top: 6px;
               text-align: right;
@@ -271,5 +260,16 @@
       font-family: "美绩点阵体";
       color: @text-light;
     }
+  }
+}
+
+.textarea {
+  height: 200px;
+  color: @text-normal;
+  border-color: @border;
+  font-family: "JetBrainsMono";
+
+  &::placeholder {
+    color: @text-dark;
   }
 }

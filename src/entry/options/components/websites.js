@@ -1,5 +1,5 @@
-import { memo, useRef, useState } from "react";
-import { Tooltip, Dropdown, Modal } from "antd";
+import { memo, useRef, useState, useEffect } from "react";
+import { Tooltip, Dropdown, Modal, Input, message } from "antd";
 import API from "@/script/api";
 import InputModule from "./InputModule";
 import MoreSvg from "@/assets/svg/more.svg";
@@ -9,9 +9,9 @@ import ExportSvg from "@/assets/svg/export.svg";
 import SyncSvg from "@/assets/svg/sync.svg";
 import SettingSvg from "@/assets/svg/setting.svg";
 
-const WebsiteItem = memo(function ({ data, index, currentIndex, setCurrentIndex }) {
+const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch }) {
   return (
-    <li className={index === currentIndex ? "active" : ""} onClick={() => setCurrentIndex(index)}>
+    <li className={data.id === curWebsiteId ? "active" : ""} onClick={() => dispatch({ type: "select", id: data.id })}>
       <div className="website-title" title={data.title}>
         <img src={data.icon} alt="icon" />
         <b>{data.title}</b>
@@ -23,13 +23,13 @@ const WebsiteItem = memo(function ({ data, index, currentIndex, setCurrentIndex 
   );
 });
 
-export default function ({ data, currentIndex, setCurrentIndex }) {
+export default function ({ dispatch, curWebsiteId, websiteList }) {
   const [newModal, setNewModal] = useState(false);
   const [settingModal, setSettingModal] = useState(false);
-  const items = (data?.websites || []).map((item, index) => (
-    <WebsiteItem key={index} data={item} index={index} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
-  ));
+  const [removeCss, setRemoveCss] = useState();
   const inputRef = useRef(null);
+
+  const items = (websiteList || []).map((item, index) => <WebsiteItem key={index} data={item} dispatch={dispatch} curWebsiteId={curWebsiteId} />);
 
   // 导出数据
   const exportData = async () => {
@@ -53,7 +53,15 @@ export default function ({ data, currentIndex, setCurrentIndex }) {
           <NewSvg height="16" onClick={() => setNewModal(true)} />
         </Tooltip>
         <Tooltip title="设置">
-          <SettingSvg height="18" onClick={() => setSettingModal(true)} />
+          <SettingSvg
+            height="18"
+            onClick={() => {
+              API.getConfig().then(({ removeCss }) => {
+                setRemoveCss(removeCss);
+                setSettingModal(true);
+              });
+            }}
+          />
         </Tooltip>
         <Dropdown
           menu={{
@@ -92,7 +100,8 @@ export default function ({ data, currentIndex, setCurrentIndex }) {
         onCancel={handleCancel}
         cancelText="取消"
         okButtonProps={{ ghost: true }}
-        cancelButtonProps={{ ghost: true }}>
+        cancelButtonProps={{ ghost: true }}
+        closable={false}>
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
@@ -100,15 +109,24 @@ export default function ({ data, currentIndex, setCurrentIndex }) {
       <Modal
         title="设置"
         open={settingModal}
-        onOk={handleOk}
         okText="确定"
-        onCancel={() => setSettingModal(false)}
         cancelText="取消"
+        onOk={() => {
+          setSettingModal(false);
+          API.setConfig(removeCss).then(() => message.success("设置成功"));
+        }}
+        onCancel={() => setSettingModal(false)}
         okButtonProps={{ ghost: true }}
-        cancelButtonProps={{ ghost: true }}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        cancelButtonProps={{ ghost: true }}
+        closable={false}>
+        <Input.TextArea
+          value={removeCss}
+          rows={4}
+          className="textarea"
+          placeholder="请输入"
+          style={{ background: "#161b22", resize: "none" }}
+          onChange={e => setRemoveCss(e.target.value)}
+        />
       </Modal>
     </div>
   );

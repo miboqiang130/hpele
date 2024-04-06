@@ -1,14 +1,14 @@
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import * as prettier from "prettier/standalone";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Tooltip } from "antd";
+import { formatCode } from "@/script/utils";
 import FullScreenSvg from "@/assets/svg/fullScreen.svg";
 import FormatSvg from "@/assets/svg/format.svg";
 import ResetSvg from "@/assets/svg/reset.svg";
 
 export default function ({ value, language, onSave }) {
   const [editor, setEditor] = useState(null);
-  const editorDom = React.useRef(null);
+  const editorDom = useRef(null);
   useEffect(() => {
     const ed = monaco.editor.create(editorDom.current, {
       value,
@@ -24,28 +24,6 @@ export default function ({ value, language, onSave }) {
     editor?.setValue(value);
   }, [value]);
 
-  // 格式化代码
-  const format = async () => {
-    let options = {};
-    switch (language) {
-      case "javascript":
-        options = {
-          parser: "babel",
-          plugins: [await import("prettier/plugins/babel"), await import("prettier/plugins/estree")],
-        };
-        break;
-      case "less":
-        options = {
-          parser: "less",
-          plugins: await import("prettier/plugins/postcss"),
-        };
-        break;
-    }
-    const value = editor.getValue();
-    const newValue = await prettier.format(value, options);
-    editor.setValue(newValue);
-  };
-
   // 重置代码
   const resetCode = () => {
     editor.setValue(value || "");
@@ -56,7 +34,13 @@ export default function ({ value, language, onSave }) {
       <div className="editor-header flex flex-middle">
         <span className="mjdzt margin-right-auto">{language}</span>
         <Tooltip title="格式化">
-          <FormatSvg height="22" className="format" onClick={format} />
+          <FormatSvg
+            height="22"
+            className="format"
+            onClick={() => {
+              formatCode(language, editor.getValue()).then(rsp => editor.setValue(rsp));
+            }}
+          />
         </Tooltip>
         <Tooltip title="重置">
           <ResetSvg height="18" onClick={resetCode} />
@@ -64,7 +48,9 @@ export default function ({ value, language, onSave }) {
         <Tooltip title="全屏">
           <FullScreenSvg height="14" onClick={() => editorDom.current.requestFullscreen()} />
         </Tooltip>
-        <button className="save-btn">保存</button>
+        <button className="save-btn" onClick={() => onSave(editor.getValue())}>
+          保存
+        </button>
       </div>
       <div className="editor" ref={editorDom}></div>
     </div>
