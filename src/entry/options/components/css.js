@@ -1,5 +1,5 @@
 import MonacoEditor from "./monacoEditor";
-import { Button, Drawer, Input, message } from "antd";
+import { Button, Drawer, Input, App, Dropdown } from "antd";
 import { useState } from "react";
 
 const defaultComment = `/**
@@ -9,13 +9,25 @@ const defaultComment = `/**
 `;
 
 export default function ({ data, dispatch }) {
+  const { message } = App.useApp();
   const list = data?.style?.removeList || [];
   const [drawer, setDrawer] = useState(false);
   const [newTextarea, setNewTextarea] = useState("");
   const removeList = list.map((i, index) => (
-    <div className="item" key={index}>
-      {i}
-    </div>
+    <Dropdown
+      key={index}
+      menu={{
+        items: [
+          {
+            key: "1",
+            label: <span className="mjdzt">删除</span>,
+            onClick: () => dispatch({ id: data.id, type: "updateRemoveList", data: list.filter(item => item !== i) }),
+          },
+        ],
+      }}
+      trigger={["contextMenu"]}>
+      <div className="item">{i}</div>
+    </Dropdown>
   ));
 
   // 代码保存
@@ -34,7 +46,15 @@ export default function ({ data, dispatch }) {
             新增一个
           </Button>
         </div>
-        <Drawer className="new-drawer" height={280} placement="bottom" closable={false} mask={false} open={drawer} getContainer={false}>
+        <Drawer
+          className="new-drawer"
+          height={280}
+          placement="bottom"
+          closable={false}
+          mask={false}
+          open={drawer}
+          getContainer={false}
+          style={{ borderTopLeftRadius: "20px", borderTopRightRadius: "20px" }}>
           <Input.TextArea
             value={newTextarea}
             className="textarea"

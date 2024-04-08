@@ -14,7 +14,6 @@
     > header {
       line-height: 100px;
       font-size: 2rem;
-      font-family: 美绩点阵体;
       letter-spacing: 4px;
 
       img {
@@ -39,12 +38,17 @@
         list-style: none;
 
         li {
+          position: relative;
           padding: 10px 20px;
           cursor: pointer;
           border-radius: @radius;
 
           &.active {
             background-color: @bg-selected;
+          }
+
+          &:hover .remove-btn {
+            visibility: visible;
           }
 
           .website-title {
@@ -137,7 +141,8 @@
           .items {
             padding: 0 20px;
             .item {
-              padding: 12px 20px;
+              position: relative;
+              padding: 12px 30px 12px 20px;
               background-color: @bg;
               border-radius: @radius;
               color: @text-light;
@@ -155,6 +160,9 @@
           }
 
           .new-drawer {
+            .textarea {
+              height: calc(100% - 30px);
+            }
             .operate {
               margin-top: 6px;
               text-align: right;
@@ -219,57 +227,5 @@
     .editor {
       height: calc(100% - 40px);
     }
-  }
-}
-
-.ant-dropdown {
-  ul.ant-dropdown-menu {
-    background-color: @popup;
-    font-family: "美绩点阵体";
-
-    li span,
-    li svg {
-      color: @text-normal;
-    }
-  }
-}
-
-.ant-drawer {
-  .ant-drawer-content-wrapper {
-    background-color: transparent;
-    div {
-      background-color: transparent;
-    }
-
-    .ant-drawer-body {
-      border-top-left-radius: 22px;
-      border-top-right-radius: 22px;
-      background-color: @popup;
-    }
-  }
-}
-
-.ant-modal .ant-modal-content {
-  background-color: @popup;
-  color: @text-normal;
-
-  .ant-modal-header {
-    background-color: transparent;
-
-    .ant-modal-title {
-      font-family: "美绩点阵体";
-      color: @text-light;
-    }
-  }
-}
-
-.textarea {
-  height: 200px;
-  color: @text-normal;
-  border-color: @border;
-  font-family: "JetBrainsMono";
-
-  &::placeholder {
-    color: @text-dark;
   }
 }

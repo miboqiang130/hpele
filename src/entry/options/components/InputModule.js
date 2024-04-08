@@ -1,37 +1,37 @@
-import { forwardRef, memo, useRef } from "react";
-import { message } from "antd";
+import { forwardRef, memo } from "react";
+import { App } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import API from "@/script/api";
 
 function InputModule(props, ref) {
+  // 确认弹窗
+  const { message, modal } = App.useApp();
   // 读取文件内容方法
   const reader = new FileReader();
   reader.onload = async function (event) {
-    console.log(event.target.result);
-    return;
     const importData = async () => {
       const data = JSON.parse(event.target.result); // 这里是文件的内容
-      await API.setData(data);
-      messageApi.open({
-        type: "success",
-        content: "导入成功",
-      });
+      await API.importData(data);
+      message.success("导入成功");
+      props.onImport();
     };
     const oldData = await API.getData();
-    let flag = false;
-    setIsOpen(false);
-    if (oldData.models?.length > 0) {
-      confirm({
+    if (oldData.websiteList?.length > 0) {
+      modal.confirm({
         icon: <ExclamationCircleOutlined />,
-        content: <p>已存在数据，继续导入会覆盖，是否继续?</p>,
+        content: <span>已存在数据，继续导入会覆盖，是否继续?</span>,
+        okButtonProps: { ghost: true },
+        cancelButtonProps: { ghost: true },
         onOk() {
-          API.clearData();
           importData();
         },
       });
     } else importData();
+    ref.current.value = null;
   };
 
   const onFileInput = () => {
+    if (!ref.current.value) return;
     try {
       reader.readAsText(ref.current.files[0]);
     } catch {
@@ -39,15 +39,7 @@ function InputModule(props, ref) {
     }
   };
 
-  return (
-    <input
-      type="file"
-      className="hide"
-      ref={ref}
-      onChange={onFileInput}
-      accept=".json"
-    />
-  );
+  return <input type="file" className="hide" ref={ref} onChange={onFileInput} accept=".json" />;
 }
 
 export default memo(forwardRef(InputModule));

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ConfigProvider, theme, App } from "antd";
 import { createRoot } from "react-dom/client";
 import "@/style/default.less";
 import "@/style/options.less";
@@ -19,14 +20,11 @@ function Options() {
   const website = websiteList.find(i => i.id === curWebsiteId);
 
   useEffect(() => {
-    API.getData(["websiteList"]).then(({ websiteList }) => {
-      setWebsiteList(websiteList || []);
-      if (websiteList.length > 0) setCurWebsiteId(websiteList[0].id);
-    });
+    dispatch();
   }, []);
 
   const dispatch = task => {
-    switch (task.type) {
+    switch (task?.type) {
       case "select": {
         return setCurWebsiteId(task.id);
       }
@@ -39,13 +37,22 @@ function Options() {
       case "updateJs": {
         return API.updateJs(task.id, task.code).then(setWebsiteList);
       }
+      case "newWebsite": {
+        return API.newWebsite(task.data).then(setWebsiteList);
+      }
+      default: {
+        return API.getData(["websiteList"]).then(({ websiteList }) => {
+          setWebsiteList(websiteList || []);
+          if (websiteList.length > 0) setCurWebsiteId(websiteList[0].id);
+        });
+      }
     }
   };
 
   return (
     <div id="options" className="flex">
       <nav>
-        <header>
+        <header className="mjdzt">
           <img height="32" src="/image/icon32.png" />
           <b>HPELE</b>
         </header>
@@ -68,6 +75,27 @@ function Options() {
     </div>
   );
 }
+// 自定义antd主题
+const customTheme = {
+  algorithm: theme.darkAlgorithm,
+  token: {
+    colorText: "#888ea8",
+    colorTextLabel: "#888ea8",
+    colorTextHeading: "#d1d5db",
+    colorTextDescription: "#6b7280",
+    colorBgElevated: "#0d1117",
+    colorBgContainer: "#161b22",
+    colorBorder: "#1b2e4b",
+  },
+  components: { Form: { labelColor: "#d1d5db" }, Button: { defaultGhostColor: "#41454b", defaultGhostBorderColor: "#41454b" } },
+};
 
+// 挂载
 const root = createRoot(document.getElementById("app"));
-root.render(<Options />);
+root.render(
+  <ConfigProvider theme={customTheme}>
+    <App style={{ height: "100%" }}>
+      <Options />
+    </App>
+  </ConfigProvider>
+);

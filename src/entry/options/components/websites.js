@@ -1,5 +1,5 @@
 import { memo, useRef, useState, useEffect } from "react";
-import { Tooltip, Dropdown, Modal, Input, message } from "antd";
+import { Tooltip, Dropdown, Modal, Input, message, Form } from "antd";
 import API from "@/script/api";
 import InputModule from "./InputModule";
 import MoreSvg from "@/assets/svg/more.svg";
@@ -8,18 +8,29 @@ import ImportSvg from "@/assets/svg/import.svg";
 import ExportSvg from "@/assets/svg/export.svg";
 import SyncSvg from "@/assets/svg/sync.svg";
 import SettingSvg from "@/assets/svg/setting.svg";
+import UrlSvg from "@/assets/svg/url.svg?url";
 
 const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch }) {
   return (
-    <li className={data.id === curWebsiteId ? "active" : ""} onClick={() => dispatch({ type: "select", id: data.id })}>
-      <div className="website-title" title={data.title}>
-        <img src={data.icon} alt="icon" />
-        <b>{data.title}</b>
-      </div>
-      <a href={data.host} target="_blank">
-        {data.host}
-      </a>
-    </li>
+    <Dropdown
+      menu={{
+        items: [
+          { label: <span className="mjdzt">禁用</span>, key: "0" },
+          { label: <span className="mjdzt">编辑</span>, key: "1" },
+          { label: <span className="mjdzt">删除</span>, key: "2" },
+        ],
+      }}
+      trigger={["contextMenu"]}>
+      <li className={data.id === curWebsiteId ? "active" : ""} onClick={() => dispatch({ type: "select", id: data.id })}>
+        <div className="website-title" title={data.title}>
+          <img src={data.icon} alt="icon" onError={e => (e.target.src = UrlSvg)} height="16" />
+          <b>{data.title}</b>
+        </div>
+        <a href={data.host} target="_blank">
+          {data.host}
+        </a>
+      </li>
+    </Dropdown>
   );
 });
 
@@ -27,6 +38,7 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
   const [newModal, setNewModal] = useState(false);
   const [settingModal, setSettingModal] = useState(false);
   const [removeCss, setRemoveCss] = useState();
+  const [form] = Form.useForm(); // 新增网站表单
   const inputRef = useRef(null);
 
   const items = (websiteList || []).map((item, index) => <WebsiteItem key={index} data={item} dispatch={dispatch} curWebsiteId={curWebsiteId} />);
@@ -39,16 +51,16 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
       filename: "export.json",
     });
   };
-  const handleOk = () => {};
-  const handleCancel = () => {
-    setNewModal(false);
+  // 导入数据
+  const onImport = () => {
+    dispatch();
   };
 
   return (
     <div className="website-list">
       <h3 className="flex flex-middle">
         <span className="margin-right-auto">网站列表</span>
-        <InputModule ref={inputRef} />
+        <InputModule ref={inputRef} onImport={onImport} />
         <Tooltip title="新增网站">
           <NewSvg height="16" onClick={() => setNewModal(true)} />
         </Tooltip>
@@ -68,7 +80,7 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
             items: [
               {
                 key: 1,
-                label: <span>导入数据</span>,
+                label: <span className="mjdzt">导入数据</span>,
                 icon: <ImportSvg height="20" width="20" />,
                 onClick: () => {
                   inputRef.current.click();
@@ -76,13 +88,13 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
               },
               {
                 key: 2,
-                label: <span>导出数据</span>,
+                label: <span className="mjdzt">导出数据</span>,
                 icon: <ExportSvg />,
                 onClick: exportData,
               },
               {
                 key: 3,
-                label: <span>与云端同步</span>,
+                label: <span className="mjdzt">与云端同步</span>,
                 icon: <SyncSvg />,
               },
             ],
@@ -93,21 +105,27 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
       <ul>{items}</ul>
 
       <Modal
-        title="新增网站"
+        title={<span className="mjdzt">新增网站</span>}
+        destroyOnClose={true}
         open={newModal}
-        onOk={handleOk}
+        onOk={() => dispatch({ type: "newWebsite", data: form.getFieldsValue() }).then(() => message.success("新增成功"))}
         okText="确定"
-        onCancel={handleCancel}
+        onCancel={() => setNewModal(false)}
         cancelText="取消"
         okButtonProps={{ ghost: true }}
         cancelButtonProps={{ ghost: true }}
         closable={false}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <Form layout="vertical" form={form} autoComplete="off">
+          <Form.Item label="标题" name="title" required tooltip="标题会在访问网站后被刷新" initialValue="">
+            <Input placeholder="请输入标题" />
+          </Form.Item>
+          <Form.Item label="网站地址" name="host" required initialValue="">
+            <Input style={{ width: "100%" }} placeholder="请输入网站地址" />
+          </Form.Item>
+        </Form>
       </Modal>
       <Modal
-        title="设置"
+        title={<span className="mjdzt">设置</span>}
         open={settingModal}
         okText="确定"
         cancelText="取消"

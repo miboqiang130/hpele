@@ -23,8 +23,18 @@ switch (process.env.NODE_ENV) {
             return rt;
           },
           set: async (key, data) => {
-            const isString = typeof data === "string";
-            localStorage.setItem(key, isString ? data : JSON.stringify(data));
+            if (typeof key === "string" && data) {
+              const isString = typeof data === "string";
+              localStorage.setItem(key, isString ? data : JSON.stringify(data));
+            } else if (typeof key === "object") {
+              for (const k in key) {
+                const isString = typeof key[k] === "string";
+                localStorage.setItem(k, isString ? data : JSON.stringify(key[k]));
+              }
+            }
+          },
+          clear: async () => {
+            localStorage.clear();
           },
         },
       },

@@ -14,7 +14,15 @@ export default {
    * @param {*} data 要设置的数据
    */
   setData(data) {
-    bw.storage.local.set(data);
+    local.set(data);
+  },
+
+  /**
+   * 导入数据
+   */
+  importData(data) {
+    local.clear();
+    local.set(data);
   },
 
   /**
@@ -22,6 +30,36 @@ export default {
    */
   getWebsiteList() {
     return local.get(["websiteList"]);
+  },
+
+  /**
+   * 新增网站
+   * @param {Object} website
+   */
+  async newWebsite(website) {
+    const { websiteList } = await this.getWebsiteList();
+    websiteList.push(
+      Object.assign(
+        {
+          id: new Date().getTime(),
+          host: "",
+          icon: "",
+          isEnable: true,
+          lastTime: "",
+          title: "",
+          style: {
+            removeList: [],
+            code: "",
+          },
+          script: {
+            code: "",
+          },
+        },
+        website
+      )
+    );
+    local.set("websiteList", websiteList);
+    return websiteList;
   },
 
   /**
