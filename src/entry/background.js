@@ -6,9 +6,9 @@ const onUpdated = async function (tabId, changeInfo, tab) {
   const { websiteList } = await API.getWebsiteList();
   const { removeCss } = await API.getConfig();
   const index = websiteList.findIndex(i => tab.url.startsWith(i.host));
-  console.log(websiteList, index);
   if (index >= 0) {
-    Object.assign(websiteList[index], { title: tab.title, icon: tab.favIconUrl });
+    const ws = websiteList[index];
+    Object.assign(ws, { title: tab.title, icon: tab.favIconUrl });
     API.setWebsiteList(websiteList);
     bw.scripting.insertCSS({
       css: websiteList[index].style.removeList.join(",") + removeCss,

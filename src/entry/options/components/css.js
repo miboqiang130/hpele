@@ -1,6 +1,7 @@
 import MonacoEditor from "./monacoEditor";
-import { Button, Drawer, Input, App, Dropdown } from "antd";
+import { Button, Drawer, Input, App, Dropdown, Empty } from "antd";
 import { useState } from "react";
+import EmptySvg from "@/assets/svg/empty.svg?url";
 
 const defaultComment = `/**
  * 请输入你的自定义样式
@@ -40,7 +41,11 @@ export default function ({ data, dispatch }) {
     <div id="css" className="flex">
       <div className="card remove-list flex">
         <h3>移除列表</h3>
-        <div className="items flex-1">{removeList}</div>
+        {list?.length > 0 ? (
+          <div className="items flex-1">{removeList}</div>
+        ) : (
+          <Empty className="no-remove-list column-middle" image={EmptySvg} imageStyle={{ height: 100 }} description={<span>无</span>}></Empty>
+        )}
         <div className="new-item">
           <Button type="primary" size="large" block icon={<big>+</big>} onClick={() => setDrawer(true)}>
             新增一个

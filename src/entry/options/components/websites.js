@@ -1,5 +1,5 @@
 import { memo, useRef, useState } from "react";
-import { Tooltip, Dropdown, Modal, Input, Form, App } from "antd";
+import { Tooltip, Dropdown, Modal, Input, Form, App, Button, Empty } from "antd";
 import API from "@/script/api";
 import InputModule from "./InputModule";
 import MoreSvg from "@/assets/svg/more.svg";
@@ -9,6 +9,7 @@ import ExportSvg from "@/assets/svg/export.svg";
 import SyncSvg from "@/assets/svg/sync.svg";
 import SettingSvg from "@/assets/svg/setting.svg";
 import UrlSvg from "@/assets/svg/url.svg?url";
+import EmptySvg from "@/assets/svg/empty.svg?url";
 
 const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch, onEdit }) {
   const { message } = App.useApp();
@@ -126,7 +127,15 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
           <MoreSvg height="16" />
         </Dropdown>
       </h3>
-      <ul>{items}</ul>
+      {websiteList.length > 0 ? (
+        <ul>{items}</ul>
+      ) : (
+        <Empty className="no-website column-middle" image={EmptySvg} imageStyle={{ height: 100 }} description={<span>你还没有创建网站</span>}>
+          <Button type="primary" onClick={() => setNewModal({ type: "new" })}>
+            新增
+          </Button>
+        </Empty>
+      )}
 
       <Modal
         title={<span className="mjdzt">{newModal.type === "new" ? "新增网站" : "编辑网站"}</span>}

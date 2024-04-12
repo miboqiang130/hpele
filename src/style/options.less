@@ -23,8 +23,12 @@
     }
 
     .website-list {
+      height: calc(100% - 100px);
+      overflow: hidden;
+
       h3 {
-        margin-top: 0;
+        line-height: 1;
+        margin: 0 0 22px 0;
 
         svg {
           margin-left: 6px;
@@ -33,6 +37,7 @@
       }
 
       ul {
+        height: calc(100% - 40px);
         padding: 0;
         margin: 0;
         list-style: none;
@@ -72,6 +77,10 @@
           }
         }
       }
+
+      .no-website {
+        height: calc(100% - 40px);
+      }
     }
   }
 
@@ -91,6 +100,7 @@
       place-items: center;
       height: 100%;
       width: 100%;
+      font-size: 1.6rem;
       text-align: center;
       color: @text-dark;
     }
@@ -146,6 +156,10 @@
           flex-direction: column;
           width: 300px;
           margin-right: @spacing;
+
+          .no-remove-list {
+            height: 100%;
+          }
 
           .items {
             padding: 0 20px;

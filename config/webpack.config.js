@@ -104,7 +104,7 @@ module.exports = {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        extractComments: true,
+        extractComments: false,
         parallel: true,
         terserOptions: {
           format: {
