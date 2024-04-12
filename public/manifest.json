@@ -4,7 +4,7 @@
   "version": "1.0",
   "default_locale": "en",
   "description": "__MSG_description__",
-  "permissions": ["storage", "downloads", "tabs", "scripting"],
+  "permissions": ["storage", "downloads", "tabs", "scripting", "userScripts"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "action": {
     "default_icon": {

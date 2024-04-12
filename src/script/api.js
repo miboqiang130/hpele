@@ -14,7 +14,7 @@ export default {
    * @param {*} data 要设置的数据
    */
   setData(data) {
-    local.set(data);
+    return local.set(data);
   },
 
   /**
@@ -30,6 +30,14 @@ export default {
    */
   getWebsiteList() {
     return local.get(["websiteList"]);
+  },
+
+  /**
+   * 设置网站列表
+   * @param {Array} websiteList
+   */
+  setWebsiteList(websiteList) {
+    return local.set({ websiteList });
   },
 
   /**
@@ -58,7 +66,7 @@ export default {
         website
       )
     );
-    local.set("websiteList", websiteList);
+    local.set({ websiteList });
     return websiteList;
   },
 
@@ -72,7 +80,7 @@ export default {
     const { websiteList } = await this.getWebsiteList();
     const index = websiteList.findIndex(w => w.id === id);
     Object.assign(websiteList[index], params);
-    local.set("websiteList", websiteList);
+    local.set({ websiteList });
     return websiteList;
   },
 
@@ -85,7 +93,7 @@ export default {
     const { websiteList } = await this.getWebsiteList();
     const index = websiteList.findIndex(i => i.id === id);
     websiteList[index].style.removeList = list;
-    local.set("websiteList", websiteList);
+    local.set({ websiteList });
     return websiteList;
   },
 
@@ -98,7 +106,7 @@ export default {
     const { websiteList } = await this.getWebsiteList();
     const index = websiteList.findIndex(i => i.id === id);
     websiteList[index].style.code = code;
-    local.set("websiteList", websiteList);
+    local.set({ websiteList });
     return websiteList;
   },
 
@@ -111,7 +119,7 @@ export default {
     const { websiteList } = await this.getWebsiteList();
     const index = websiteList.findIndex(i => i.id === id);
     websiteList[index].script.code = code;
-    local.set("websiteList", websiteList);
+    local.set({ websiteList });
     return websiteList;
   },
 
@@ -126,6 +134,6 @@ export default {
    * 设置配置
    */
   setConfig(config) {
-    return local.set("removeCss", config);
+    return local.set({ removeCss: config });
   },
 };

@@ -3,12 +3,12 @@ let bw;
 // 开发环境下使用localStorage
 switch (process.env.NODE_ENV) {
   case "development": {
+    const parse = ["websiteList"];
     bw = {
       storage: {
         local: {
           get: async keys => {
             let rt = {};
-            const parse = ["websiteList"];
             if (keys) {
               keys.forEach(i => {
                 rt[i] = parse.includes(i) ? JSON.parse(localStorage.getItem(i)) : localStorage.getItem(i);
@@ -22,15 +22,10 @@ switch (process.env.NODE_ENV) {
             }
             return rt;
           },
-          set: async (key, data) => {
-            if (typeof key === "string" && data) {
-              const isString = typeof data === "string";
-              localStorage.setItem(key, isString ? data : JSON.stringify(data));
-            } else if (typeof key === "object") {
-              for (const k in key) {
-                const isString = typeof key[k] === "string";
-                localStorage.setItem(k, isString ? data : JSON.stringify(key[k]));
-              }
+          set: async obj => {
+            for (const k in obj) {
+              const isString = typeof obj[k] === "string";
+              localStorage.setItem(k, isString ? obj[k] : JSON.stringify(obj[k]));
             }
           },
           clear: async () => {

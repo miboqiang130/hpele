@@ -1,5 +1,5 @@
-import { memo, useRef, useState, useEffect } from "react";
-import { Tooltip, Dropdown, Modal, Input, message, Form } from "antd";
+import { memo, useRef, useState } from "react";
+import { Tooltip, Dropdown, Modal, Input, Form, App } from "antd";
 import API from "@/script/api";
 import InputModule from "./InputModule";
 import MoreSvg from "@/assets/svg/more.svg";
@@ -10,14 +10,23 @@ import SyncSvg from "@/assets/svg/sync.svg";
 import SettingSvg from "@/assets/svg/setting.svg";
 import UrlSvg from "@/assets/svg/url.svg?url";
 
-const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch }) {
+const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch, onEdit }) {
+  const { message } = App.useApp();
   return (
     <Dropdown
       menu={{
         items: [
-          { label: <span className="mjdzt">禁用</span>, key: "0" },
-          { label: <span className="mjdzt">编辑</span>, key: "1" },
-          { label: <span className="mjdzt">删除</span>, key: "2" },
+          // { label: <span className="mjdzt">禁用</span>, key: "0" },
+          { label: <span className="mjdzt">编辑</span>, key: "1", onClick: onEdit },
+          {
+            label: <span className="mjdzt">删除</span>,
+            key: "2",
+            onClick: () => {
+              dispatch({ type: "deleteWebsite", id: data.id }).then(() => {
+                message.success("删除成功");
+              });
+            },
+          },
         ],
       }}
       trigger={["contextMenu"]}>
@@ -35,13 +44,28 @@ const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch }) {
 });
 
 export default function ({ dispatch, curWebsiteId, websiteList }) {
+  const { message } = App.useApp();
   const [newModal, setNewModal] = useState(false);
   const [settingModal, setSettingModal] = useState(false);
   const [removeCss, setRemoveCss] = useState();
   const [form] = Form.useForm(); // 新增网站表单
   const inputRef = useRef(null);
 
-  const items = (websiteList || []).map((item, index) => <WebsiteItem key={index} data={item} dispatch={dispatch} curWebsiteId={curWebsiteId} />);
+  const items = (websiteList || []).map((item, index) => (
+    <WebsiteItem
+      key={index}
+      data={item}
+      dispatch={dispatch}
+      curWebsiteId={curWebsiteId}
+      onEdit={() => {
+        setNewModal({ type: "edit", id: item.id });
+        form.setFieldsValue({
+          title: item.title,
+          host: item.host,
+        });
+      }}
+    />
+  ));
 
   // 导出数据
   const exportData = async () => {
@@ -62,7 +86,7 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
         <span className="margin-right-auto">网站列表</span>
         <InputModule ref={inputRef} onImport={onImport} />
         <Tooltip title="新增网站">
-          <NewSvg height="16" onClick={() => setNewModal(true)} />
+          <NewSvg height="16" onClick={() => setNewModal({ type: "new" })} />
         </Tooltip>
         <Tooltip title="设置">
           <SettingSvg
@@ -105,12 +129,23 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
       <ul>{items}</ul>
 
       <Modal
-        title={<span className="mjdzt">新增网站</span>}
-        destroyOnClose={true}
+        title={<span className="mjdzt">{newModal.type === "new" ? "新增网站" : "编辑网站"}</span>}
         open={newModal}
-        onOk={() => dispatch({ type: "newWebsite", data: form.getFieldsValue() }).then(() => message.success("新增成功"))}
+        onOk={() =>
+          dispatch(
+            newModal.type === "new"
+              ? { type: "newWebsite", data: form.getFieldsValue() }
+              : { type: "updateWebsite", data: form.getFieldsValue(), id: newModal.id }
+          ).then(() => {
+            setNewModal(false);
+            message.success("新增成功");
+          })
+        }
         okText="确定"
-        onCancel={() => setNewModal(false)}
+        onCancel={() => {
+          setNewModal(false);
+          form.resetFields();
+        }}
         cancelText="取消"
         okButtonProps={{ ghost: true }}
         cancelButtonProps={{ ghost: true }}

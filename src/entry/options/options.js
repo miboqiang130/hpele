@@ -28,6 +28,13 @@ function Options() {
       case "select": {
         return setCurWebsiteId(task.id);
       }
+      case "deleteWebsite": {
+        const newList = websiteList.filter(i => i.id !== task.id);
+        return API.setData({ websiteList: newList }).then(() => setWebsiteList(newList));
+      }
+      case "updateWebsite": {
+        return API.updateWebsite(task.id, task.data).then(setWebsiteList);
+      }
       case "updateRemoveList": {
         return API.updateRemoveList(task.id, task.data).then(setWebsiteList);
       }
@@ -43,7 +50,7 @@ function Options() {
       default: {
         return API.getData(["websiteList"]).then(({ websiteList }) => {
           setWebsiteList(websiteList || []);
-          if (websiteList.length > 0) setCurWebsiteId(websiteList[0].id);
+          if (websiteList?.length > 0) setCurWebsiteId(websiteList[0].id);
         });
       }
     }
@@ -58,20 +65,26 @@ function Options() {
         </header>
         <Websites dispatch={dispatch} curWebsiteId={curWebsiteId} websiteList={websiteList} />
       </nav>
-      <main className="flex-1">
-        <div className="top card">
-          <ul className="mjdzt">
-            {routes.map((i, index) => (
-              <li key={index} onClick={() => setTab(i)} className={tab.id === i.id ? "active" : ""}>
-                {i.label}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="content">
-          {tab.id === "style" ? <Css data={website} dispatch={dispatch} /> : <Javascript data={website} dispatch={dispatch} />}
-        </div>
-      </main>
+      {website ? (
+        <main className="flex-1">
+          <div className="top card">
+            <ul className="mjdzt">
+              {routes.map((i, index) => (
+                <li key={index} onClick={() => setTab(i)} className={tab.id === i.id ? "active" : ""}>
+                  {i.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="content">
+            {tab.id === "style" ? <Css data={website} dispatch={dispatch} /> : <Javascript data={website} dispatch={dispatch} />}
+          </div>
+        </main>
+      ) : (
+        <main className="flex-1">
+          <div className="no-select">⬅ 请先选择一个网站吧</div>
+        </main>
+      )}
     </div>
   );
 }
