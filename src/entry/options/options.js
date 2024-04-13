@@ -42,7 +42,7 @@ function Options() {
         return API.updateStyleCode(task.id, task.code).then(setWebsiteList);
       }
       case "updateJs": {
-        return API.updateJs(task.id, task.code).then(setWebsiteList);
+        return API.updateJs(task.data, task.code).then(setWebsiteList);
       }
       case "newWebsite": {
         return API.newWebsite(task.data).then(setWebsiteList);

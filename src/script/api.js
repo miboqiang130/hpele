@@ -115,11 +115,19 @@ export default {
    * @param {*} list 移除列表
    * @returns 网站列表
    */
-  async updateJs(id, code) {
+  async updateJs(data, code) {
+    const id = data.id;
     const { websiteList } = await this.getWebsiteList();
     const index = websiteList.findIndex(i => i.id === id);
     websiteList[index].script.code = code;
     local.set({ websiteList });
+    // 配置userScripts
+    const scripts = await bw.userScripts.getScripts({ ids: [id.toString()] });
+    if (scripts.length > 0) {
+      chrome.userScripts.update([{ id: id.toString(), js: [{ code }], matches: [data.host + "*"] }]);
+    } else {
+      chrome.userScripts.register([{ id: id.toString(), js: [{ code }], matches: [data.host + "*"] }]);
+    }
     return websiteList;
   },
 

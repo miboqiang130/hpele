@@ -20,7 +20,7 @@ function isUserScriptsAvailable() {
 export default function ({ data, dispatch }) {
   const { message } = App.useApp();
   const onSave = code => {
-    dispatch({ type: "updateJs", id: data.id, code });
+    dispatch({ type: "updateJs", data, code });
     message.success("保存成功");
   };
   const isAvailable = isUserScriptsAvailable();
