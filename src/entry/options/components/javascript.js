@@ -2,6 +2,7 @@ import MonacoEditor from "./monacoEditor";
 import { App, Result } from "antd";
 import bw from "@/script/browser";
 import instructionPng from "@/assets/img/instruction.png";
+import API from "@/script/api";
 
 const defaultComment = `/**
  * 请输入你想要注入的JavaScript代码
@@ -21,6 +22,7 @@ export default function ({ data, dispatch }) {
   const { message } = App.useApp();
   const onSave = code => {
     dispatch({ type: "updateJs", data, code });
+    API.updateJs(data, code);
     message.success("保存成功");
   };
   const isAvailable = isUserScriptsAvailable();

@@ -63,7 +63,7 @@ module.exports = {
     }),
     new MonacoWebpackPlugin({
       filename: "static/js/[name].worker.js",
-      languages: ["typescript", "javascript", "css", "less"],
+      languages: ["typescript", "javascript", "css"],
     }),
   ],
   module: {

@@ -1,46 +1,69 @@
 import { memo, useRef, useState } from "react";
-import { Tooltip, Dropdown, Modal, Input, Form, App, Button, Empty } from "antd";
+import { Tooltip, Dropdown, Modal, Input, Form, App, Button, Empty, Switch } from "antd";
+import { EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import API from "@/script/api";
+import bw from "@/script/browser";
 import InputModule from "./InputModule";
 import MoreSvg from "@/assets/svg/more.svg";
 import NewSvg from "@/assets/svg/new.svg";
 import ImportSvg from "@/assets/svg/import.svg";
 import ExportSvg from "@/assets/svg/export.svg";
 import SyncSvg from "@/assets/svg/sync.svg";
+import DeleteSvg from "@/assets/svg/delete.svg";
 import SettingSvg from "@/assets/svg/setting.svg";
 import UrlSvg from "@/assets/svg/url.svg?url";
 import EmptySvg from "@/assets/svg/empty.svg?url";
 
 const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch, onEdit }) {
-  const { message } = App.useApp();
+  const { message, modal } = App.useApp();
   return (
-    <Dropdown
-      menu={{
-        items: [
-          // { label: <span className="mjdzt">禁用</span>, key: "0" },
-          { label: <span className="mjdzt">编辑</span>, key: "1", onClick: onEdit },
-          {
-            label: <span className="mjdzt">删除</span>,
-            key: "2",
-            onClick: () => {
-              dispatch({ type: "deleteWebsite", id: data.id }).then(() => {
-                message.success("删除成功");
+    <li className={data.id === curWebsiteId ? "active" : ""} onClick={() => dispatch({ type: "select", id: data.id })}>
+      <div className="website-title" title={data.title}>
+        <img src={data.icon} alt="icon" onError={e => (e.target.src = UrlSvg)} height="16" />
+        <b>{data.title}</b>
+      </div>
+      <div className="website-reg">
+        <b>{data.host}</b>
+      </div>
+      {data.desc && <div className="website-desc margin-top-8">{data.desc}</div>}
+      <div className="opt-bar margin-top-8">
+        <Tooltip title="是否启用">
+          <Switch
+            size="small"
+            checked={data.isEnable}
+            defaultChecked
+            className="margin-right-auto"
+            onClick={(check, e) => {
+              e.stopPropagation();
+              API.toggleEnable(data.id);
+            }}
+          />
+        </Tooltip>
+        <Tooltip title="编辑">
+          <EditOutlined className="margin-right-8" onClick={onEdit} />
+        </Tooltip>
+        <Tooltip title="删除">
+          <DeleteSvg
+            className="delete-btn"
+            height="16"
+            onClick={e => {
+              e.stopPropagation();
+              modal.confirm({
+                icon: <ExclamationCircleOutlined />,
+                content: <span>确定要删除吗?</span>,
+                okButtonProps: { ghost: true },
+                cancelButtonProps: { ghost: true },
+                onOk() {
+                  dispatch({ type: "deleteWebsite", id: data.id }).then(() => {
+                    message.success("删除成功");
+                  });
+                },
               });
-            },
-          },
-        ],
-      }}
-      trigger={["contextMenu"]}>
-      <li className={data.id === curWebsiteId ? "active" : ""} onClick={() => dispatch({ type: "select", id: data.id })}>
-        <div className="website-title" title={data.title}>
-          <img src={data.icon} alt="icon" onError={e => (e.target.src = UrlSvg)} height="16" />
-          <b>{data.title}</b>
-        </div>
-        <a href={data.host} target="_blank">
-          {data.host}
-        </a>
-      </li>
-    </Dropdown>
+            }}
+          />
+        </Tooltip>
+      </div>
+    </li>
   );
 });
 
@@ -58,12 +81,10 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
       data={item}
       dispatch={dispatch}
       curWebsiteId={curWebsiteId}
-      onEdit={() => {
+      onEdit={e => {
+        e.stopPropagation();
         setNewModal({ type: "edit", id: item.id });
-        form.setFieldsValue({
-          title: item.title,
-          host: item.host,
-        });
+        form.setFieldsValue(item);
       }}
     />
   ));
@@ -117,11 +138,11 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
                 icon: <ExportSvg />,
                 onClick: exportData,
               },
-              {
-                key: 3,
-                label: <span className="mjdzt">与云端同步</span>,
-                icon: <SyncSvg />,
-              },
+              // {
+              //   key: 3,
+              //   label: <span className="mjdzt">与云端同步</span>,
+              //   icon: <SyncSvg />,
+              // },
             ],
           }}>
           <MoreSvg height="16" />
@@ -147,13 +168,14 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
               : { type: "updateWebsite", data: form.getFieldsValue(), id: newModal.id }
           ).then(() => {
             setNewModal(false);
-            message.success("新增成功");
+            form.setFieldsValue({ title: "", desc: "", host: "" });
+            message.success("操作成功");
           })
         }
         okText="确定"
         onCancel={() => {
           setNewModal(false);
-          form.resetFields();
+          form.setFieldsValue({ title: "", desc: "", host: "" });
         }}
         cancelText="取消"
         okButtonProps={{ ghost: true }}
@@ -163,8 +185,11 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
           <Form.Item label="标题" name="title" required tooltip="标题会在访问网站后被刷新" initialValue="">
             <Input placeholder="请输入标题" />
           </Form.Item>
-          <Form.Item label="网站地址" name="host" required initialValue="">
-            <Input style={{ width: "100%" }} placeholder="请输入网站地址" />
+          <Form.Item label="网站域名" name="host" required tooltip="请输入网站域名" initialValue="">
+            <Input style={{ width: "100%" }} placeholder="请输入网站域名，例如：https://website.com" />
+          </Form.Item>
+          <Form.Item label="网站备注" name="desc" initialValue="">
+            <Input.TextArea style={{ width: "100%" }} placeholder="请输入备注" rows={4} />
           </Form.Item>
         </Form>
       </Modal>

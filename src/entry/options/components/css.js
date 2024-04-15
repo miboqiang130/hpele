@@ -2,10 +2,11 @@ import MonacoEditor from "./monacoEditor";
 import { Button, Drawer, Input, App, Dropdown, Empty } from "antd";
 import { useState } from "react";
 import EmptySvg from "@/assets/svg/empty.svg?url";
+import DeleteSvg from "@/assets/svg/delete.svg";
+import API from "@/script/api";
 
 const defaultComment = `/**
  * 请输入你的自定义样式
- * 支持less语法
  */
 `;
 
@@ -15,25 +16,24 @@ export default function ({ data, dispatch }) {
   const [drawer, setDrawer] = useState(false);
   const [newTextarea, setNewTextarea] = useState("");
   const removeList = list.map((i, index) => (
-    <Dropdown
-      key={index}
-      menu={{
-        items: [
-          {
-            key: "1",
-            label: <span className="mjdzt">删除</span>,
-            onClick: () => dispatch({ id: data.id, type: "updateRemoveList", data: list.filter(item => item !== i) }),
-          },
-        ],
-      }}
-      trigger={["contextMenu"]}>
-      <div className="item">{i}</div>
-    </Dropdown>
+    <div className="item">
+      {i}
+      <DeleteSvg
+        className="delete"
+        height="16"
+        onClick={() =>
+          API.updateRemoveList(
+            data.id,
+            list.filter(item => item !== i)
+          )
+        }
+      />
+    </div>
   ));
 
   // 代码保存
   const onSave = code => {
-    dispatch({ type: "updateStyleCode", id: data.id, code });
+    API.updateStyleCode(data.id, code);
     message.success("保存成功");
   };
 
@@ -94,7 +94,7 @@ export default function ({ data, dispatch }) {
       <div className="card custom-css flex-1">
         <h3>自定义样式</h3>
         <div className="editor-box">
-          <MonacoEditor className="editor-dom" language="less" value={data?.style?.code || defaultComment} onSave={onSave} />
+          <MonacoEditor className="editor-dom" language="css" value={data?.style?.code || defaultComment} onSave={onSave} />
         </div>
       </div>
     </div>

@@ -1,12 +1,13 @@
+import "@/style/default.less";
+import "@/style/options.less";
 import { useEffect, useState } from "react";
 import { ConfigProvider, theme, App } from "antd";
 import { createRoot } from "react-dom/client";
-import "@/style/default.less";
-import "@/style/options.less";
 import Css from "./components/css";
 import Javascript from "./components/javascript";
 import Websites from "./components/websites";
 import API from "@/script/api";
+import bw from "@/script/browser";
 
 const routes = [
   { id: "style", label: "样式" },
@@ -21,6 +22,9 @@ function Options() {
 
   useEffect(() => {
     dispatch();
+    bw.storage.local.onChanged?.addListener(change => {
+      if (change.websiteList) setWebsiteList(change.websiteList.newValue);
+    });
   }, []);
 
   const dispatch = task => {
@@ -30,22 +34,16 @@ function Options() {
       }
       case "deleteWebsite": {
         const newList = websiteList.filter(i => i.id !== task.id);
-        return API.setData({ websiteList: newList }).then(() => setWebsiteList(newList));
+        return API.setData({ websiteList: newList });
       }
       case "updateWebsite": {
-        return API.updateWebsite(task.id, task.data).then(setWebsiteList);
+        return API.updateWebsite(task.id, task.data);
       }
       case "updateRemoveList": {
-        return API.updateRemoveList(task.id, task.data).then(setWebsiteList);
-      }
-      case "updateStyleCode": {
-        return API.updateStyleCode(task.id, task.code).then(setWebsiteList);
-      }
-      case "updateJs": {
-        return API.updateJs(task.data, task.code).then(setWebsiteList);
+        return API.updateRemoveList(task.id, task.data);
       }
       case "newWebsite": {
-        return API.newWebsite(task.data).then(setWebsiteList);
+        return API.newWebsite(task.data);
       }
       default: {
         return API.getData(["websiteList"]).then(({ websiteList }) => {

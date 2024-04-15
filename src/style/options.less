@@ -70,10 +70,25 @@
             }
           }
 
-          a {
+          .website-reg {
             font-size: small;
-            color: @text-dark;
             text-decoration: none;
+          }
+
+          .website-desc {
+            color: @text-dark;
+            font-size: small;
+          }
+
+          .opt-bar {
+            display: flex;
+            color: @text-normal;
+            font-size: 18px;
+            align-items: center;
+
+            .delete-btn {
+              color: @danger;
+            }
           }
         }
       }
@@ -165,13 +180,27 @@
             padding: 0 20px;
             .item {
               position: relative;
-              padding: 12px 30px 12px 20px;
+              padding: 18px 30px 18px 20px;
               background-color: @bg;
               border-radius: @radius;
               color: @text-light;
+              line-height: 1;
 
               &:not(:last-child) {
                 margin-bottom: 12px;
+              }
+
+              &:hover .delete {
+                visibility: visible;
+              }
+
+              .delete {
+                position: absolute;
+                top: 18px;
+                right: 6px;
+                visibility: hidden;
+                color: @danger;
+                cursor: pointer;
               }
             }
           }
