@@ -15,6 +15,15 @@ export default function ({ value, language, onSave }) {
       language,
       theme: "vs-dark",
     });
+    ed.addAction({
+      id: "save-code",
+      label: "save",
+      keybindings: [monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyMod.KEY_S)],
+      run: function () {
+        onSave(ed.getValue());
+      },
+    });
+
     setEditor(ed);
     editorDom.current.onfullscreenchange = function () {
       ed.layout();
@@ -33,7 +42,7 @@ export default function ({ value, language, onSave }) {
     <div className="editor-container flex">
       <div className="editor-header flex flex-middle">
         <span className="mjdzt margin-right-auto">{language}</span>
-        <Tooltip title="格式化">
+        <Tooltip title={gm("btnFormat")}>
           <FormatSvg
             height="22"
             className="format"
@@ -42,14 +51,14 @@ export default function ({ value, language, onSave }) {
             }}
           />
         </Tooltip>
-        <Tooltip title="重置">
+        <Tooltip title={gm("btnReset")}>
           <ResetSvg height="18" onClick={resetCode} />
         </Tooltip>
-        <Tooltip title="全屏">
+        <Tooltip title={gm("btnFullScreen")}>
           <FullScreenSvg height="14" onClick={() => editorDom.current.requestFullscreen()} />
         </Tooltip>
         <button className="save-btn" onClick={() => onSave(editor.getValue())}>
-          保存
+          {gm("btnSave")}
         </button>
       </div>
       <div className="editor" ref={editorDom}></div>

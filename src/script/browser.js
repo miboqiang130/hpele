@@ -5,6 +5,8 @@ switch (process.env.NODE_ENV) {
   case "development": {
     let callback;
     const parse = ["websiteList"];
+    const i18n = require("../../public/_locales/en_US/messages.json");
+    console.log(i18n);
     bw = {
       storage: {
         local: {
@@ -38,6 +40,12 @@ switch (process.env.NODE_ENV) {
               callback = cb;
             },
           },
+        },
+      },
+      i18n: {
+        getMessage(str) {
+          if (i18n[str]) return i18n[str]["message"];
+          else throw `[Error]The message ${str} does not exist.`;
         },
       },
     };

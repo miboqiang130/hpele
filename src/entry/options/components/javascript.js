@@ -4,11 +4,6 @@ import bw from "@/script/browser";
 import instructionPng from "@/assets/img/instruction.png";
 import API from "@/script/api";
 
-const defaultComment = `/**
- * 请输入你想要注入的JavaScript代码
- */
-`;
-
 function isUserScriptsAvailable() {
   try {
     bw.userScripts;
@@ -28,10 +23,10 @@ export default function ({ data, dispatch }) {
   const isAvailable = isUserScriptsAvailable();
   return (
     <div className="card" id="javascript">
-      <h3>注入js代码</h3>
+      <h3>{gm("titleInjectingCode")}</h3>
       {isAvailable ? (
         <div className="editor-box">
-          <MonacoEditor language="javascript" value={data.script.code || defaultComment} onSave={onSave} />
+          <MonacoEditor language="javascript" value={data.script.code || gm("defaultScript")} onSave={onSave} />
         </div>
       ) : (
         <Result

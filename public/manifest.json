@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "hpele",
   "version": "1.0",
-  "default_locale": "en",
+  "default_locale": "en_US",
   "description": "__MSG_description__",
   "minimum_chrome_version": "120",
   "permissions": ["storage", "downloads", "tabs", "scripting", "userScripts"],

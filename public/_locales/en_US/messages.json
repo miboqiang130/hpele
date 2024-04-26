@@ -1,0 +1,129 @@
+{
+  "description": {
+    "message": "You can customize the style of your website with this extension"
+  },
+  "titleWebsiteList": {
+    "message": "Website List"
+  },
+  "titleRemoveList": {
+    "message": "Remove List"
+  },
+  "titleCustomStyle": {
+    "message": "Custom Style"
+  },
+  "titleInjectingCode": {
+    "message": "Injecting Code"
+  },
+
+  "formTitle": {
+    "message": "Title"
+  },
+  "formTitleTooltip": {
+    "message": "The title will be updated after visiting the site"
+  },
+  "formTitlePlaceholder": {
+    "message": "Enter Title"
+  },
+  "formDomain": {
+    "message": "Domain"
+  },
+  "formDomainPlaceholder": {
+    "message": "Enter Domain, e.g. https://website.com"
+  },
+  "formRemark": {
+    "message": "Remark"
+  },
+  "formRemarkPlaceholder": {
+    "message": "Enter Remark"
+  },
+  "formRomovePlaceholder": {
+    "message": "Please enter the selector to be added, the return character distinguishes between multiple selectors"
+  },
+
+  "tagStyle": {
+    "message": "Style"
+  },
+  "tagScript": {
+    "message": "Script"
+  },
+
+  "btnNew": {
+    "message": "New"
+  },
+  "btnOk": {
+    "message": "确定"
+  },
+  "btnSave": {
+    "message": "Save"
+  },
+  "btnCancel": {
+    "message": "Cancel"
+  },
+  "btnDelete": {
+    "message": "Delete"
+  },
+  "btnEdit": {
+    "message": "Edit"
+  },
+  "btnFormat": {
+    "message": "Format"
+  },
+  "btnReset": {
+    "message": "Reset"
+  },
+  "btnFullScreen": {
+    "message": "Full Screen"
+  },
+
+  "optNewWebsite": {
+    "message": "New Website"
+  },
+  "optEditWebsite": {
+    "message": "Edit Website"
+  },
+  "optSetting": {
+    "message": "Setting"
+  },
+  "optIsEnable": {
+    "message": "Is Enable"
+  },
+
+  "import": {
+    "message": "Import"
+  },
+  "export": {
+    "message": "Export"
+  },
+
+  "defaultStyle": {
+    "message": "/**\n * Enter your customized style here\n */"
+  },
+  "defaultScript": {
+    "message": "/**\n * Enter your custom script here\n */"
+  },
+
+  "empty": {
+    "message": "no data"
+  },
+  "emptyWebsite": {
+    "message": "You haven't created a website yet"
+  },
+  "emptyNoSel": {
+    "message": "⬅ Please choose a website first"
+  },
+
+  "removeStyle": {
+    "message": "Enter remove style"
+  },
+
+  "confirmDelete": {
+    "message": "Are you sure you want to delete it?"
+  },
+
+  "noticeSaveSuc": {
+    "message": "Save Successful"
+  },
+  "noticeDelSuc": {
+    "message": "Deleted successful"
+  }
+}

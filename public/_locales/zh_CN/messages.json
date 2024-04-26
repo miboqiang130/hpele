@@ -1,0 +1,129 @@
+{
+  "description": {
+    "message": "你可以用本扩展自定义你的网站样式"
+  },
+  "titleWebsiteList": {
+    "message": "网站列表"
+  },
+  "titleRemoveList": {
+    "message": "移除列表"
+  },
+  "titleCustomStyle": {
+    "message": "自定义样式"
+  },
+  "titleInjectingCode": {
+    "message": "注入脚本"
+  },
+
+  "formTitle": {
+    "message": "标题"
+  },
+  "formTitleTooltip": {
+    "message": "标题会在访问网站后被更新"
+  },
+  "formTitlePlaceholder": {
+    "message": "请输入标题"
+  },
+  "formDomain": {
+    "message": "域名"
+  },
+  "formDomainPlaceholder": {
+    "message": "请输入域名，例如：https://website.com"
+  },
+  "formRemark": {
+    "message": "备注"
+  },
+  "formRemarkPlaceholder": {
+    "message": "请输入备注"
+  },
+  "formRomovePlaceholder": {
+    "message": "请输入选择器，多个选择器请用回车符分隔"
+  },
+
+  "tagStyle": {
+    "message": "样式"
+  },
+  "tagScript": {
+    "message": "脚本"
+  },
+
+  "btnNew": {
+    "message": "新增"
+  },
+  "btnOk": {
+    "message": "确定"
+  },
+  "btnSave": {
+    "message": "保存"
+  },
+  "btnCancel": {
+    "message": "取消"
+  },
+  "btnDelete": {
+    "message": "删除"
+  },
+  "btnEdit": {
+    "message": "编辑"
+  },
+  "btnFormat": {
+    "message": "格式化"
+  },
+  "btnReset": {
+    "message": "重置"
+  },
+  "btnFullScreen": {
+    "message": "全屏"
+  },
+
+  "optNewWebsite": {
+    "message": "新增网站"
+  },
+  "optEditWebsite": {
+    "message": "编辑网站"
+  },
+  "optSetting": {
+    "message": "设置"
+  },
+  "optIsEnable": {
+    "message": "是否启用"
+  },
+
+  "import": {
+    "message": "导入配置"
+  },
+  "export": {
+    "message": "导出配置"
+  },
+
+  "defaultStyle": {
+    "message": "/**\n * 请在这里输入自定义样式\n */"
+  },
+  "defaultScript": {
+    "message": "/**\n * 请在这里输入自定义脚本\n */"
+  },
+
+  "empty": {
+    "message": "无"
+  },
+  "emptyWebsite": {
+    "message": "你还没有创建网站"
+  },
+  "emptyNoSel": {
+    "message": "⬅ 请先选择一个网站吧"
+  },
+
+  "removeStyle": {
+    "message": "输入移除的样式"
+  },
+
+  "confirmDelete": {
+    "message": "你确定要删除吗?"
+  },
+
+  "noticeSaveSuc": {
+    "message": "保存成功"
+  },
+  "noticeDelSuc": {
+    "message": "删除成功"
+  }
+}

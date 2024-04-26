@@ -9,9 +9,11 @@ import Websites from "./components/websites";
 import API from "@/script/api";
 import bw from "@/script/browser";
 
+window.top.gm = bw.i18n.getMessage;
+
 const routes = [
-  { id: "style", label: "样式" },
-  { id: "script", label: "脚本" },
+  { id: "style", label: gm("tagStyle") },
+  { id: "script", label: gm("tagScript") },
 ];
 
 function Options() {
@@ -35,15 +37,6 @@ function Options() {
       case "deleteWebsite": {
         const newList = websiteList.filter(i => i.id !== task.id);
         return API.setData({ websiteList: newList });
-      }
-      case "updateWebsite": {
-        return API.updateWebsite(task.id, task.data);
-      }
-      case "updateRemoveList": {
-        return API.updateRemoveList(task.id, task.data);
-      }
-      case "newWebsite": {
-        return API.newWebsite(task.data);
       }
       default: {
         return API.getData(["websiteList"]).then(({ websiteList }) => {
@@ -80,7 +73,7 @@ function Options() {
         </main>
       ) : (
         <main className="flex-1">
-          <div className="no-select">⬅ 请先选择一个网站吧</div>
+          <div className="no-select">{gm("emptyNoSel")}</div>
         </main>
       )}
     </div>

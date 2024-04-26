@@ -27,7 +27,7 @@ const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch, onEdit }) {
       </div>
       {data.desc && <div className="website-desc margin-top-8">{data.desc}</div>}
       <div className="opt-bar margin-top-8">
-        <Tooltip title="是否启用">
+        <Tooltip title={gm("optIsEnable")}>
           <Switch
             size="small"
             checked={data.isEnable}
@@ -39,10 +39,10 @@ const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch, onEdit }) {
             }}
           />
         </Tooltip>
-        <Tooltip title="编辑">
+        <Tooltip title={gm("btnEdit")}>
           <EditOutlined className="margin-right-8" onClick={onEdit} />
         </Tooltip>
-        <Tooltip title="删除">
+        <Tooltip title={gm("btnDelete")}>
           <DeleteSvg
             className="delete-btn"
             height="16"
@@ -50,12 +50,12 @@ const WebsiteItem = memo(function ({ data, curWebsiteId, dispatch, onEdit }) {
               e.stopPropagation();
               modal.confirm({
                 icon: <ExclamationCircleOutlined />,
-                content: <span>确定要删除吗?</span>,
+                content: <span>{gm("confirmDelete")}</span>,
                 okButtonProps: { ghost: true },
                 cancelButtonProps: { ghost: true },
                 onOk() {
                   dispatch({ type: "deleteWebsite", id: data.id }).then(() => {
-                    message.success("删除成功");
+                    message.success(gm("noticeDelSuc"));
                   });
                 },
               });
@@ -105,12 +105,12 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
   return (
     <div className="website-list">
       <h3 className="flex flex-middle">
-        <span className="margin-right-auto">网站列表</span>
+        <span className="margin-right-auto">{gm("titleWebsiteList")}</span>
         <InputModule ref={inputRef} onImport={onImport} />
-        <Tooltip title="新增网站">
+        <Tooltip title={gm("optNewWebsite")}>
           <NewSvg height="16" onClick={() => setNewModal({ type: "new" })} />
         </Tooltip>
-        <Tooltip title="设置">
+        <Tooltip title={gm("optSetting")}>
           <SettingSvg
             height="18"
             onClick={() => {
@@ -126,7 +126,7 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
             items: [
               {
                 key: 1,
-                label: <span className="mjdzt">导入数据</span>,
+                label: <span className="mjdzt">{gm("import")}</span>,
                 icon: <ImportSvg height="20" width="20" />,
                 onClick: () => {
                   inputRef.current.click();
@@ -134,7 +134,7 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
               },
               {
                 key: 2,
-                label: <span className="mjdzt">导出数据</span>,
+                label: <span className="mjdzt">{gm("export")}</span>,
                 icon: <ExportSvg />,
                 onClick: exportData,
               },
@@ -151,56 +151,57 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
       {websiteList.length > 0 ? (
         <ul>{items}</ul>
       ) : (
-        <Empty className="no-website column-middle" image={EmptySvg} imageStyle={{ height: 100 }} description={<span>你还没有创建网站</span>}>
+        <Empty className="no-website column-middle" image={EmptySvg} imageStyle={{ height: 100 }} description={<span>{gm("emptyWebsite")}</span>}>
           <Button type="primary" onClick={() => setNewModal({ type: "new" })}>
-            新增
+            {gm("btnNew")}
           </Button>
         </Empty>
       )}
 
       <Modal
-        title={<span className="mjdzt">{newModal.type === "new" ? "新增网站" : "编辑网站"}</span>}
+        title={<span className="mjdzt">{newModal.type === "new" ? gm("optNewWebsite") : gm("optEditWebsite")}</span>}
         open={newModal}
-        onOk={() =>
-          dispatch(
-            newModal.type === "new"
-              ? { type: "newWebsite", data: form.getFieldsValue() }
-              : { type: "updateWebsite", data: form.getFieldsValue(), id: newModal.id }
-          ).then(() => {
+        onOk={() => {
+          let pm;
+          if (newModal.type === "new") {
+            pm = API.newWebsite(form.getFieldsValue());
+          } else pm = API.updateWebsite(newModal.id, form.getFieldsValue());
+
+          pm.then(() => {
             setNewModal(false);
             form.setFieldsValue({ title: "", desc: "", host: "" });
-            message.success("操作成功");
-          })
-        }
-        okText="确定"
+            message.success(gm("noticeSaveSuc"));
+          });
+        }}
+        okText={gm("btnSave")}
         onCancel={() => {
           setNewModal(false);
           form.setFieldsValue({ title: "", desc: "", host: "" });
         }}
-        cancelText="取消"
+        cancelText={gm("btnCancel")}
         okButtonProps={{ ghost: true }}
         cancelButtonProps={{ ghost: true }}
         closable={false}>
         <Form layout="vertical" form={form} autoComplete="off">
-          <Form.Item label="标题" name="title" required tooltip="标题会在访问网站后被刷新" initialValue="">
-            <Input placeholder="请输入标题" />
+          <Form.Item label={gm("formTitle")} name="title" required tooltip={gm("formTitleTooltip")} initialValue="">
+            <Input placeholder={gm("formTitlePlaceholder")} />
           </Form.Item>
-          <Form.Item label="网站域名" name="host" required tooltip="请输入网站域名" initialValue="">
-            <Input style={{ width: "100%" }} placeholder="请输入网站域名，例如：https://website.com" />
+          <Form.Item label={gm("formDomain")} name="host" required initialValue="">
+            <Input style={{ width: "100%" }} placeholder={gm("formDomainPlaceholder")} />
           </Form.Item>
-          <Form.Item label="网站备注" name="desc" initialValue="">
-            <Input.TextArea style={{ width: "100%" }} placeholder="请输入备注" rows={4} />
+          <Form.Item label={gm("formRemark")} name="desc" initialValue="">
+            <Input.TextArea style={{ width: "100%" }} placeholder={gm("formRemarkPlaceholder")} rows={4} />
           </Form.Item>
         </Form>
       </Modal>
       <Modal
-        title={<span className="mjdzt">设置</span>}
+        title={<span className="mjdzt">{gm("optSetting")}</span>}
         open={settingModal}
-        okText="确定"
-        cancelText="取消"
+        okText={gm("btnSave")}
+        cancelText={gm("btnCancel")}
         onOk={() => {
           setSettingModal(false);
-          API.setConfig(removeCss).then(() => message.success("设置成功"));
+          API.setConfig(removeCss).then(() => message.success(gm("noticeSaveSuc")));
         }}
         onCancel={() => setSettingModal(false)}
         okButtonProps={{ ghost: true }}
@@ -210,7 +211,7 @@ export default function ({ dispatch, curWebsiteId, websiteList }) {
           value={removeCss}
           rows={4}
           className="textarea"
-          placeholder="请输入"
+          placeholder={gm("removeStyle")}
           style={{ background: "#161b22", resize: "none" }}
           onChange={e => setRemoveCss(e.target.value)}
         />

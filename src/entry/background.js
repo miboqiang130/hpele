@@ -19,7 +19,7 @@ bw.runtime.onInstalled.addListener(() => {
 });
 
 const onUpdated = async function (tabId, changeInfo, tab) {
-  if (changeInfo.status !== "complete") return;
+  if (changeInfo.status !== "loading") return;
   const { websiteList } = await API.getWebsiteList();
   const { removeCss } = await API.getConfig();
   const index = websiteList?.findIndex(i => new RegExp("^" + i.host).test(tab.url));

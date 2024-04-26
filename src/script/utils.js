@@ -10,6 +10,7 @@ export const formatCode = async (language, value) => {
       options = {
         parser: "babel",
         plugins: [await import("prettier/plugins/babel"), await import("prettier/plugins/estree")],
+        tabWidth: 4,
       };
       break;
     case "css":
@@ -17,6 +18,7 @@ export const formatCode = async (language, value) => {
       options = {
         parser: "less",
         plugins: await import("prettier/plugins/postcss"),
+        tabWidth: 4,
       };
       break;
   }
